@@ -1,6 +1,8 @@
 const AppError = require("../utils/AppError");
 
-/* Um ontroller, pode conter, no máximo, cinco funções
+const sqLiteConnection = require("../database/sqlite");
+
+/* Um controller, pode conter, no máximo, cinco funções
       
     * index - GET para listar vários registros.
     * show - GET para exibir um registro específico
@@ -9,14 +11,26 @@ const AppError = require("../utils/AppError");
     * delete - DELETE para remover um registro
 */
 class UsersController {
-    create(req, res) {
+    async create(req, res) {
         const { name, email, password } = req.body;
 
-        if (!name) {
-            throw new AppError("'Name'is required");
+        const database = await sqLiteConnection();
+
+        const checkUserExists = await database.get(
+            "SELECT * FROM users WHERE email = (?)",
+            [email]
+        );
+
+        if (checkUserExists) {
+            throw new AppError("This email already exists.");
         }
 
-        res.status(201).json({ name, email, password });
+        await database.run(
+            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+            [name, email, password]
+        );
+
+        return res.status(201).json();
     }
 }
 
