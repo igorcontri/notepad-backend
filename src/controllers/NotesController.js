@@ -42,7 +42,19 @@ class NotesController {
       .where({ note_id: id })
       .orderBy("created_at");
 
-    return res.json(note);
+    return res.json({
+      ...note,
+      tags,
+      links,
+    });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    await knex("notes").where({ id }).delete();
+
+    return res.json();
   }
 }
 
