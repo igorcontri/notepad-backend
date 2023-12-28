@@ -12,71 +12,69 @@ const sqLiteConnection = require("../database/sqlite");
     * delete - DELETE para remover um registro
 */
 class UsersController {
-    async create(req, res) {
-        const { name, email, password } = req.body;
+  async create(req, res) {
+    const { name, email, password } = req.body;
 
-        const database = await sqLiteConnection();
+    const database = await sqLiteConnection();
 
-        const checkUserExists = await database.get(
-            "SELECT * FROM users WHERE email = (?)",
-            [email]
-        );
+    const checkUserExists = await database.get(
+      "SELECT * FROM users WHERE email = (?)",
+      [email]
+    );
 
-        if (checkUserExists) {
-            throw new AppError("This email already exists.");
-        }
-
-        const hashedPassword = await hash(password, 8);
-
-        await database.run(
-            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-            [name, email, hashedPassword]
-        );
-
-        return res.status(201).json();
+    if (checkUserExists) {
+      throw new AppError("This email already exists.");
     }
 
-    async update(req, res) {
-        const { name, email, password, old_password } = req.body;
-        const { id } = req.params;
+    const hashedPassword = await hash(password, 8);
 
-        const database = await sqLiteConnection();
-        const user = await database.get("SELECT * FROM users WHERE id = (?)", [
-            id,
-        ]);
+    await database.run(
+      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+      [name, email, hashedPassword]
+    );
 
-        if (!user) {
-            throw new AppError("User not found.");
-        }
+    return res.status(201).json();
+  }
 
-        const userWithUpdateEmail = await database.get(
-            "SELECT * FROM users WHERE email = (?)",
-            [email]
-        );
+  async update(req, res) {
+    const { name, email, password, old_password } = req.body;
+    const { id } = req.params;
 
-        if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
-            throw new AppError("This email already exists.");
-        }
+    const database = await sqLiteConnection();
+    const user = await database.get("SELECT * FROM users WHERE id = (?)", [id]);
 
-        user.name = name ?? user.name;
-        user.email = email ?? user.email;
+    if (!user) {
+      throw new AppError("User not found.");
+    }
 
-        if (password && !old_password) {
-            throw new AppError("Error! Old password required");
-        }
+    const userWithUpdateEmail = await database.get(
+      "SELECT * FROM users WHERE email = (?)",
+      [email]
+    );
 
-        if (password && old_password) {
-            const checkOldPassword = await compare(old_password, user.password);
+    if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
+      throw new AppError("This email already exists.");
+    }
 
-            if (!checkOldPassword) {
-                throw new AppError("Error! Wrong Password");
-            }
+    user.name = name ?? user.name;
+    user.email = email ?? user.email;
 
-            user.password = await hash(password, 8);
-        }
+    if (password && !old_password) {
+      throw new AppError("Error! Old password required");
+    }
 
-        await database.run(
-            `
+    if (password && old_password) {
+      const checkOldPassword = await compare(old_password, user.password);
+
+      if (!checkOldPassword) {
+        throw new AppError("Error! Wrong Password");
+      }
+
+      user.password = await hash(password, 8);
+    }
+
+    await database.run(
+      `
             UPDATE users SET
             name = ?,
             email = ?,
@@ -84,11 +82,11 @@ class UsersController {
             updated_at = DATETIME('now')
             WHERE id = ?
         `,
-            [user.name, user.email, user.password, id]
-        );
+      [user.name, user.email, user.password, id]
+    );
 
-        return res.status(200).json();
-    }
+    return res.status(200).json();
+  }
 }
 
 module.exports = UsersController;
