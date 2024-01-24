@@ -1,4 +1,13 @@
-# node-rocketseat
-Trata-se de uma aplicação backend com propósitos de estudo. (curso Explorer - Rocketseat
+### Back-end
 
-* Este repositório será integrado com o Front-end do meu outro repositório "notepad".
+- Nodejs
+- Express
+- Express-async-errors
+- SQL (SQLite, SQLite3)
+- Migrations
+- Knex
+- bcryptjs
+- nodemon
+- Insomnia
+- Beekeeper
+- CRUD
