@@ -1,12 +1,11 @@
 {
   "name": "notepad-backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Igor Contri",
+  "license": "ISC",
+  "description": "api developed for study purposes"
 }
