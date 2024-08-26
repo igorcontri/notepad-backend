@@ -16,10 +16,11 @@ app.get("/message/:id/:user", (request, response) => {
 
 // QUERY PARAMS
 // /users?page=2&limit=10   ==  "?" é o separador; "page" é a variável; "=2" é o valor; "&" para adicionar mais um parametro (no caso, "limit")...
+// Query não sao parametros obrigatórios, você conseguirá acessar a rota, mas os valores, se não declarados, serão undefined.
 app.get("/users", (request, response) => {
     const { page, limit } = request.query;
 
-    response.send(`Página: ${page}. Mostrar: ${limit}`);
+    response.send(`Página: ${page}. Mostrar: ${limit}.`);
 });
 
 const PORT = 3333;
