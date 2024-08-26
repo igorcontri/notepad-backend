@@ -1,6 +1,8 @@
 const express = require("express");
 
 const app = express();
+// Isso indica ao node qual será o formato padrão para receber informações através do corpo da requisição (no caso, json)
+app.use(express.json());
 
 // ROUTE PARAMS
 // /message/:id  == ":" indica que é um parâmetro; "id" pode levar qualquer nome desejado; parametros sao obrigatórios para acessar a página
@@ -21,6 +23,14 @@ app.get("/users", (request, response) => {
     const { page, limit } = request.query;
 
     response.send(`Página: ${page}. Mostrar: ${limit}.`);
+});
+
+app.post("/users", (request, response) => {
+    const { name, email, password } = request.body;
+
+    // "send" devolve um espécie de html, mas é possivel devolver um "Json" como é o segundo caso
+    // response.send(`Usuário: ${name}. E-mail: ${email}. Senha: ${password}`);
+    response.json({ name, email, password });
 });
 
 const PORT = 3333;
