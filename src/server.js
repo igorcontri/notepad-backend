@@ -25,13 +25,5 @@ app.get("/users", (request, response) => {
     response.send(`Página: ${page}. Mostrar: ${limit}.`);
 });
 
-app.post("/users", (request, response) => {
-    const { name, email, password } = request.body;
-
-    // "send" devolve um espécie de html, mas é possivel devolver um "Json" como é o segundo caso
-    // response.send(`Usuário: ${name}. E-mail: ${email}. Senha: ${password}`);
-    response.json({ name, email, password });
-});
-
 const PORT = 3333;
 app.listen(PORT, () => console.log(`Server is Running on Port ${PORT}`));
