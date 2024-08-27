@@ -3,7 +3,7 @@ const { Router } = require("express");
 
 const usersRoutes = Router();
 
-app.post("/users", (request, response) => {
+usersRoutes.post("/", (request, response) => {
     const { name, email, password } = request.body;
 
     // "send" devolve um espécie de html, mas é possivel devolver um "Json" como é o segundo caso
